@@ -33,16 +33,6 @@ func RandomOwner() string {
 	return RandomString(6)
 }
 
-func RandomBalance() int64 {
-	return RandomInt(0, 1000)
-}
-
-func RandomCurrency() string {
-	currencies := []string{EUR, USD}
-	n := len(currencies)
-	return currencies[rand.Intn(n)]
-}
-
 func RandomEmail() string {
 	return fmt.Sprintf("%s@email.com", RandomString(6))
 }

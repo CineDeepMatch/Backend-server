@@ -3,10 +3,10 @@ package gapi
 import (
 	"fmt"
 
-	db "github.com/DatVuongTrong/simple_bank/db/sqlc"
-	util "github.com/DatVuongTrong/simple_bank/db/utils"
-	"github.com/DatVuongTrong/simple_bank/pb"
-	"github.com/DatVuongTrong/simple_bank/token"
+	db "github.com/CineDeepMatch/Backend-server/db/sqlc"
+	util "github.com/CineDeepMatch/Backend-server/db/utils"
+	"github.com/CineDeepMatch/Backend-server/pb"
+	"github.com/CineDeepMatch/Backend-server/token"
 )
 
 type Server struct {

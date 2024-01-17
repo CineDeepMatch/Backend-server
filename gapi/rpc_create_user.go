@@ -3,10 +3,10 @@ package gapi
 import (
 	"context"
 
-	db "github.com/DatVuongTrong/simple_bank/db/sqlc"
-	util "github.com/DatVuongTrong/simple_bank/db/utils"
-	"github.com/DatVuongTrong/simple_bank/pb"
-	"github.com/DatVuongTrong/simple_bank/val"
+	db "github.com/CineDeepMatch/Backend-server/db/sqlc"
+	util "github.com/CineDeepMatch/Backend-server/db/utils"
+	"github.com/CineDeepMatch/Backend-server/pb"
+	"github.com/CineDeepMatch/Backend-server/val"
 	"github.com/lib/pq"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"

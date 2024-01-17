@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	util "github.com/DatVuongTrong/simple_bank/db/utils"
+	util "github.com/CineDeepMatch/Backend-server/db/utils"
 	"github.com/stretchr/testify/require"
 )
 

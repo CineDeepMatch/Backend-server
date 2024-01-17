@@ -21,7 +21,6 @@ INSERT INTO sessions (
   client_ip ,
   is_blocked ,
   expires_at 
-
 ) VALUES (
     $1, $2, $3, $4, $5, $6, $7
 ) RETURNING id, username, refresh_token, user_agent, client_ip, is_blocked, expires_at, create_at
@@ -38,7 +37,7 @@ type CreateSessionParams struct {
 }
 
 func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error) {
-	row := q.db.QueryRowContext(ctx, createSession,
+	row := q.db.QueryRow(ctx, createSession,
 		arg.ID,
 		arg.Username,
 		arg.RefreshToken,
@@ -67,7 +66,7 @@ WHERE id = $1 LIMIT 1
 `
 
 func (q *Queries) GetSession(ctx context.Context, id uuid.UUID) (Session, error) {
-	row := q.db.QueryRowContext(ctx, getSession, id)
+	row := q.db.QueryRow(ctx, getSession, id)
 	var i Session
 	err := row.Scan(
 		&i.ID,
