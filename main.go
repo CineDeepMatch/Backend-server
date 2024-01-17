@@ -66,7 +66,7 @@ func runGrpcServer(config util.Config, store db.Store) {
 	}
 
 	grpcServer := grpc.NewServer()
-	pb.RegisterSimpleBankServer(grpcServer, server)
+	pb.RegisterCineDeepMatchServer(grpcServer, server)
 	reflection.Register(grpcServer)
 
 	listener, err := net.Listen("tcp", config.GRPCServerAddress)
@@ -103,7 +103,7 @@ func runGatewayServer(config util.Config, store db.Store) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	err = pb.RegisterSimpleBankHandlerServer(ctx, grpcMux, server)
+	err = pb.RegisterCineDeepMatchHandlerServer(ctx, grpcMux, server)
 
 	if err != nil {
 		log.Fatal().Err(err).Msg("cannot register handler server")

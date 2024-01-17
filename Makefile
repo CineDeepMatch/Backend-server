@@ -33,7 +33,8 @@ dockerserver:
 mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/CineDeepMatch/Backend-server/db/sqlc Store
 proto: 
-	
+	rm -f pb/*.go
+	rm -f doc/swagger/*.swagger.json
 	protoc --proto_path=proto --go_out=pb --go_opt=paths=source_relative \
     --go-grpc_out=pb --go-grpc_opt=paths=source_relative \
 	--grpc-gateway_out=pb --grpc-gateway_opt=paths=source_relative \
@@ -44,5 +45,3 @@ evans:
 
 .PHONY: createdb dropdb postgres migrateup migratedown sqlc test server mock migrateup1 migratedown1 dockerserver proto evans
 
-# rm -f pb/*.go
-# 	rm -f doc/swagger/*.swagger.json
