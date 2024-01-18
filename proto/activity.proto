@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/CineDeepMatch/Backend-server/pb";
+
+message Activity {
+    string id = 1;
+    string user_id = 2;
+    string view_page = 3;
+    int32 duration = 4;
+    google.protobuf.Timestamp page_visited_at = 5;
+}

@@ -1,7 +1,7 @@
 -- name: CreateSession :one
 INSERT INTO sessions (
   id ,
-  username ,
+  user_id ,
   refresh_token ,
   user_agent ,
   client_ip ,
@@ -14,3 +14,4 @@ INSERT INTO sessions (
 -- name: GetSession :one
 SELECT * FROM sessions
 WHERE id = $1 LIMIT 1;
+

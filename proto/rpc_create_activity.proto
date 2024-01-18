@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/timestamp.proto";
+import "activity.proto";
+
+option go_package = "github.com/CineDeepMatch/Backend-server/pb";
+
+message CreateActivityRequest {
+    string user_id = 1;
+    string view_page = 2;
+    int32 duration = 3;
+    google.protobuf.Timestamp page_visited_at = 4;
+}
+
+message CreateActivityResponse {
+    Activity activity = 1;
+}
+

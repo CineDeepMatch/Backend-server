@@ -8,30 +8,34 @@ package db
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createUser = `-- name: CreateUser :one
 INSERT INTO users (
+    id,
     username,
     hashed_password,
     full_name,
     email
 
 ) VALUES (
-    $1, $2, $3, $4
-) RETURNING username, hashed_password, full_name, email, password_changed_at, create_at
+    $1, $2, $3, $4, $5
+) RETURNING id, username, hashed_password, full_name, email, password_changed_at, create_at
 `
 
 type CreateUserParams struct {
-	Username       string `json:"username"`
-	HashedPassword string `json:"hashed_password"`
-	FullName       string `json:"full_name"`
-	Email          string `json:"email"`
+	ID             uuid.UUID `json:"id"`
+	Username       string    `json:"username"`
+	HashedPassword string    `json:"hashed_password"`
+	FullName       string    `json:"full_name"`
+	Email          string    `json:"email"`
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
 	row := q.db.QueryRow(ctx, createUser,
+		arg.ID,
 		arg.Username,
 		arg.HashedPassword,
 		arg.FullName,
@@ -39,6 +43,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 	)
 	var i User
 	err := row.Scan(
+		&i.ID,
 		&i.Username,
 		&i.HashedPassword,
 		&i.FullName,
@@ -50,7 +55,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 }
 
 const getUser = `-- name: GetUser :one
-SELECT username, hashed_password, full_name, email, password_changed_at, create_at FROM users
+SELECT id, username, hashed_password, full_name, email, password_changed_at, create_at FROM users
 WHERE username = $1 LIMIT 1
 `
 
@@ -58,6 +63,27 @@ func (q *Queries) GetUser(ctx context.Context, username string) (User, error) {
 	row := q.db.QueryRow(ctx, getUser, username)
 	var i User
 	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.HashedPassword,
+		&i.FullName,
+		&i.Email,
+		&i.PasswordChangedAt,
+		&i.CreateAt,
+	)
+	return i, err
+}
+
+const getUserById = `-- name: GetUserById :one
+SELECT id, username, hashed_password, full_name, email, password_changed_at, create_at FROM users
+WHERE id = $1 LIMIT 1
+`
+
+func (q *Queries) GetUserById(ctx context.Context, id uuid.UUID) (User, error) {
+	row := q.db.QueryRow(ctx, getUserById, id)
+	var i User
+	err := row.Scan(
+		&i.ID,
 		&i.Username,
 		&i.HashedPassword,
 		&i.FullName,
@@ -76,7 +102,7 @@ SET
     full_name = COALESCE($3, full_name),
     email = COALESCE($4, email)
 WHERE username = $5
-RETURNING username, hashed_password, full_name, email, password_changed_at, create_at
+RETURNING id, username, hashed_password, full_name, email, password_changed_at, create_at
 `
 
 type UpdateUserParams struct {
@@ -97,6 +123,47 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, e
 	)
 	var i User
 	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.HashedPassword,
+		&i.FullName,
+		&i.Email,
+		&i.PasswordChangedAt,
+		&i.CreateAt,
+	)
+	return i, err
+}
+
+const updateUserById = `-- name: UpdateUserById :one
+UPDATE users 
+SET 
+    hashed_password = COALESCE($1, hashed_password),
+    password_changed_at = COALESCE($2, password_changed_at),
+    full_name = COALESCE($3, full_name),
+    email = COALESCE($4, email)
+WHERE id = $5
+RETURNING id, username, hashed_password, full_name, email, password_changed_at, create_at
+`
+
+type UpdateUserByIdParams struct {
+	HashedPassword    pgtype.Text        `json:"hashed_password"`
+	PasswordChangedAt pgtype.Timestamptz `json:"password_changed_at"`
+	FullName          pgtype.Text        `json:"full_name"`
+	Email             pgtype.Text        `json:"email"`
+	ID                uuid.UUID          `json:"id"`
+}
+
+func (q *Queries) UpdateUserById(ctx context.Context, arg UpdateUserByIdParams) (User, error) {
+	row := q.db.QueryRow(ctx, updateUserById,
+		arg.HashedPassword,
+		arg.PasswordChangedAt,
+		arg.FullName,
+		arg.Email,
+		arg.ID,
+	)
+	var i User
+	err := row.Scan(
+		&i.ID,
 		&i.Username,
 		&i.HashedPassword,
 		&i.FullName,
