@@ -26,6 +26,38 @@
     "application/json"
   ],
   "paths": {
+    "/v1/create_activity": {
+      "post": {
+        "operationId": "CineDeepMatch_CreateActivity",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbCreateActivityResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbCreateActivityRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CineDeepMatch"
+        ]
+      }
+    },
     "/v1/create_user": {
       "post": {
         "operationId": "CineDeepMatch_CreateUser",
@@ -124,6 +156,55 @@
     }
   },
   "definitions": {
+    "pbActivity": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "viewPage": {
+          "type": "string"
+        },
+        "duration": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageVisitedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "pbCreateActivityRequest": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "viewPage": {
+          "type": "string"
+        },
+        "duration": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageVisitedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "pbCreateActivityResponse": {
+      "type": "object",
+      "properties": {
+        "activity": {
+          "$ref": "#/definitions/pbActivity"
+        }
+      }
+    },
     "pbCreateUserRequest": {
       "type": "object",
       "properties": {
@@ -188,7 +269,7 @@
     "pbUpdateUserRequest": {
       "type": "object",
       "properties": {
-        "username": {
+        "userId": {
           "type": "string"
         },
         "fullName": {
@@ -213,6 +294,9 @@
     "pbUser": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string"
+        },
         "username": {
           "type": "string"
         },

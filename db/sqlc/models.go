@@ -10,25 +10,24 @@ import (
 	"github.com/google/uuid"
 )
 
-type Account struct {
-	ID       int64     `json:"id"`
-	Owner    string    `json:"owner"`
-	Balance  int64     `json:"balance"`
-	Currency string    `json:"currency"`
-	CreateAt time.Time `json:"create_at"`
+type Activity struct {
+	ID            uuid.UUID `json:"id"`
+	UserID        uuid.UUID `json:"user_id"`
+	ViewPage      string    `json:"view_page"`
+	Duration      int32     `json:"duration"`
+	PageVisitedAt time.Time `json:"page_visited_at"`
 }
 
-type Entry struct {
-	ID        int64 `json:"id"`
-	AccountID int64 `json:"account_id"`
-	// can be negative
-	Amount   int64     `json:"amount"`
-	CreateAt time.Time `json:"create_at"`
+type FavMovie struct {
+	ID        uuid.UUID `json:"id"`
+	UserID    uuid.UUID `json:"user_id"`
+	Movies    string    `json:"movies"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 type Session struct {
 	ID           uuid.UUID `json:"id"`
-	Username     string    `json:"username"`
+	UserID       uuid.UUID `json:"user_id"`
 	RefreshToken string    `json:"refresh_token"`
 	UserAgent    string    `json:"user_agent"`
 	ClientIp     string    `json:"client_ip"`
@@ -37,16 +36,8 @@ type Session struct {
 	CreateAt     time.Time `json:"create_at"`
 }
 
-type Transfer struct {
-	ID            int64 `json:"id"`
-	FromAccountID int64 `json:"from_account_id"`
-	ToAccountID   int64 `json:"to_account_id"`
-	// must be positive
-	Amount   int64     `json:"amount"`
-	CreateAt time.Time `json:"create_at"`
-}
-
 type User struct {
+	ID                uuid.UUID `json:"id"`
 	Username          string    `json:"username"`
 	HashedPassword    string    `json:"hashed_password"`
 	FullName          string    `json:"full_name"`

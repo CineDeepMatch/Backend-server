@@ -9,6 +9,7 @@ import (
 	util "github.com/CineDeepMatch/Backend-server/db/utils"
 	"github.com/CineDeepMatch/Backend-server/pb"
 	"github.com/CineDeepMatch/Backend-server/val"
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
@@ -17,6 +18,8 @@ import (
 
 func (server *Server) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
 	authPayload, err := server.authorizeUser(ctx)
+	userId := uuid.MustParse(req.GetUserId())
+
 	if err != nil {
 		return nil, unauthenticatedError(err)
 	}
@@ -26,12 +29,12 @@ func (server *Server) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest)
 		return nil, invalidArgumentError(violations)
 	}
 
-	if authPayload.Username != req.GetUsername() {
+	if authPayload.UserId != userId {
 		return nil, status.Errorf(codes.PermissionDenied, "cannot update other user's info")
 	}
 
-	arg := db.UpdateUserParams{
-		Username: req.GetUsername(),
+	arg := db.UpdateUserByIdParams{
+		ID: userId,
 		FullName: pgtype.Text{
 			String: req.GetFullName(),
 			Valid:  req.FullName != nil,
@@ -60,7 +63,7 @@ func (server *Server) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest)
 		}
 	}
 
-	user, err := server.store.UpdateUser(ctx, arg)
+	user, err := server.store.UpdateUserById(ctx, arg)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, status.Errorf(codes.NotFound, "user not found: %s", err)
@@ -76,9 +79,6 @@ func (server *Server) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest)
 }
 
 func validateUpdateUserRequest(req *pb.UpdateUserRequest) (violations []*errdetails.BadRequest_FieldViolation) {
-	if err := val.ValidateUsername(req.GetUsername()); err != nil {
-		violations = append(violations, fieldViolation("username", err))
-	}
 	if req.Password != nil {
 		if err := val.ValidatePassword(req.GetPassword()); err != nil {
 			violations = append(violations, fieldViolation("password", err))

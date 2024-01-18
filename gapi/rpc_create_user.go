@@ -7,6 +7,7 @@ import (
 	util "github.com/CineDeepMatch/Backend-server/db/utils"
 	"github.com/CineDeepMatch/Backend-server/pb"
 	"github.com/CineDeepMatch/Backend-server/val"
+	"github.com/google/uuid"
 	"github.com/lib/pq"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
@@ -25,7 +26,13 @@ func (server *Server) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 		return nil, status.Errorf(codes.Internal, "failed to hash password: %s", err)
 	}
 
+	userId, err := uuid.NewRandom()
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to create uuid: %s", err)
+	}
+
 	arg := db.CreateUserParams{
+		ID:             userId,
 		Username:       req.GetUsername(),
 		HashedPassword: hashedPassword,
 		FullName:       req.GetFullName(),

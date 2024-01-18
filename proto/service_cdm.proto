@@ -6,6 +6,9 @@ import "rpc_create_user.proto";
 import "rpc_update_user.proto";
 import "rpc_login_user.proto";
 
+import "rpc_create_activity.proto";
+
+
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
@@ -49,4 +52,11 @@ service CineDeepMatch {
             body: "*"
         };
     };
+    rpc CreateActivity (CreateActivityRequest) returns (CreateActivityResponse) {
+      option (google.api.http) = {
+          post: "/v1/create_activity"
+          body: "*"
+      };
+  };
+
 }

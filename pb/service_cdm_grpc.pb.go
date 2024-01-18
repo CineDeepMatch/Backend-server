@@ -19,9 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	CineDeepMatch_CreateUser_FullMethodName = "/pb.CineDeepMatch/CreateUser"
-	CineDeepMatch_UpdateUser_FullMethodName = "/pb.CineDeepMatch/UpdateUser"
-	CineDeepMatch_LoginUser_FullMethodName  = "/pb.CineDeepMatch/LoginUser"
+	CineDeepMatch_CreateUser_FullMethodName     = "/pb.CineDeepMatch/CreateUser"
+	CineDeepMatch_UpdateUser_FullMethodName     = "/pb.CineDeepMatch/UpdateUser"
+	CineDeepMatch_LoginUser_FullMethodName      = "/pb.CineDeepMatch/LoginUser"
+	CineDeepMatch_CreateActivity_FullMethodName = "/pb.CineDeepMatch/CreateActivity"
 )
 
 // CineDeepMatchClient is the client API for CineDeepMatch service.
@@ -31,6 +32,7 @@ type CineDeepMatchClient interface {
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
 	LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserResponse, error)
+	CreateActivity(ctx context.Context, in *CreateActivityRequest, opts ...grpc.CallOption) (*CreateActivityResponse, error)
 }
 
 type cineDeepMatchClient struct {
@@ -68,6 +70,15 @@ func (c *cineDeepMatchClient) LoginUser(ctx context.Context, in *LoginUserReques
 	return out, nil
 }
 
+func (c *cineDeepMatchClient) CreateActivity(ctx context.Context, in *CreateActivityRequest, opts ...grpc.CallOption) (*CreateActivityResponse, error) {
+	out := new(CreateActivityResponse)
+	err := c.cc.Invoke(ctx, CineDeepMatch_CreateActivity_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CineDeepMatchServer is the server API for CineDeepMatch service.
 // All implementations must embed UnimplementedCineDeepMatchServer
 // for forward compatibility
@@ -75,6 +86,7 @@ type CineDeepMatchServer interface {
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
 	LoginUser(context.Context, *LoginUserRequest) (*LoginUserResponse, error)
+	CreateActivity(context.Context, *CreateActivityRequest) (*CreateActivityResponse, error)
 	mustEmbedUnimplementedCineDeepMatchServer()
 }
 
@@ -90,6 +102,9 @@ func (UnimplementedCineDeepMatchServer) UpdateUser(context.Context, *UpdateUserR
 }
 func (UnimplementedCineDeepMatchServer) LoginUser(context.Context, *LoginUserRequest) (*LoginUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LoginUser not implemented")
+}
+func (UnimplementedCineDeepMatchServer) CreateActivity(context.Context, *CreateActivityRequest) (*CreateActivityResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateActivity not implemented")
 }
 func (UnimplementedCineDeepMatchServer) mustEmbedUnimplementedCineDeepMatchServer() {}
 
@@ -158,6 +173,24 @@ func _CineDeepMatch_LoginUser_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CineDeepMatch_CreateActivity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateActivityRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CineDeepMatchServer).CreateActivity(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CineDeepMatch_CreateActivity_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CineDeepMatchServer).CreateActivity(ctx, req.(*CreateActivityRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CineDeepMatch_ServiceDesc is the grpc.ServiceDesc for CineDeepMatch service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -176,6 +209,10 @@ var CineDeepMatch_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "LoginUser",
 			Handler:    _CineDeepMatch_LoginUser_Handler,
+		},
+		{
+			MethodName: "CreateActivity",
+			Handler:    _CineDeepMatch_CreateActivity_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

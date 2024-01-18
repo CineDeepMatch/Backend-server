@@ -7,7 +7,7 @@ createdb:
 	docker exec -it postgres-cdm createdb --username=dat --owner=dat cine-deep-match
 
 dropdb:
-	docker exec -it postgres-cdm dropdb cine-deep-match
+	docker exec -it postgres-cdm dropdb --username=dat cine-deep-match
 
 migrateup:
 	migrate -path db/migration -database "$(DB_URL)" -verbose up
@@ -32,6 +32,8 @@ dockerserver:
 	docker run --name simplebank --network bank-network -p 8080:8080 -e GIN_MODE=release -e DB_SOURCE="postgresql://dat:secret@postgres:5432/cine-deep-match?sslmode=disable" simplebank:latest
 mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/CineDeepMatch/Backend-server/db/sqlc Store
+new_migration:
+	migrate create -ext sql -dir db/migration -seq $(name)
 proto: 
 	rm -f pb/*.go
 	rm -f doc/swagger/*.swagger.json
@@ -43,5 +45,6 @@ proto:
 evans:
 	evans --host localhost --port 9090 -r repl
 
-.PHONY: createdb dropdb postgres migrateup migratedown sqlc test server mock migrateup1 migratedown1 dockerserver proto evans
+.PHONY: createdb dropdb postgres migrateup migratedown sqlc test server mock migrateup1 migratedown1 new_migration dockerserver proto evans
 
+	
