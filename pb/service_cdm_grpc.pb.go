@@ -19,10 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	CineDeepMatch_CreateUser_FullMethodName     = "/pb.CineDeepMatch/CreateUser"
-	CineDeepMatch_UpdateUser_FullMethodName     = "/pb.CineDeepMatch/UpdateUser"
-	CineDeepMatch_LoginUser_FullMethodName      = "/pb.CineDeepMatch/LoginUser"
-	CineDeepMatch_CreateActivity_FullMethodName = "/pb.CineDeepMatch/CreateActivity"
+	CineDeepMatch_CreateUser_FullMethodName      = "/pb.CineDeepMatch/CreateUser"
+	CineDeepMatch_UpdateUser_FullMethodName      = "/pb.CineDeepMatch/UpdateUser"
+	CineDeepMatch_LoginUser_FullMethodName       = "/pb.CineDeepMatch/LoginUser"
+	CineDeepMatch_CreateActivity_FullMethodName  = "/pb.CineDeepMatch/CreateActivity"
+	CineDeepMatch_CreateFavMovies_FullMethodName = "/pb.CineDeepMatch/CreateFavMovies"
 )
 
 // CineDeepMatchClient is the client API for CineDeepMatch service.
@@ -33,6 +34,7 @@ type CineDeepMatchClient interface {
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
 	LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserResponse, error)
 	CreateActivity(ctx context.Context, in *CreateActivityRequest, opts ...grpc.CallOption) (*CreateActivityResponse, error)
+	CreateFavMovies(ctx context.Context, in *CreateFavMoviesRequest, opts ...grpc.CallOption) (*CreateFavMoviesResponse, error)
 }
 
 type cineDeepMatchClient struct {
@@ -79,6 +81,15 @@ func (c *cineDeepMatchClient) CreateActivity(ctx context.Context, in *CreateActi
 	return out, nil
 }
 
+func (c *cineDeepMatchClient) CreateFavMovies(ctx context.Context, in *CreateFavMoviesRequest, opts ...grpc.CallOption) (*CreateFavMoviesResponse, error) {
+	out := new(CreateFavMoviesResponse)
+	err := c.cc.Invoke(ctx, CineDeepMatch_CreateFavMovies_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CineDeepMatchServer is the server API for CineDeepMatch service.
 // All implementations must embed UnimplementedCineDeepMatchServer
 // for forward compatibility
@@ -87,6 +98,7 @@ type CineDeepMatchServer interface {
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
 	LoginUser(context.Context, *LoginUserRequest) (*LoginUserResponse, error)
 	CreateActivity(context.Context, *CreateActivityRequest) (*CreateActivityResponse, error)
+	CreateFavMovies(context.Context, *CreateFavMoviesRequest) (*CreateFavMoviesResponse, error)
 	mustEmbedUnimplementedCineDeepMatchServer()
 }
 
@@ -105,6 +117,9 @@ func (UnimplementedCineDeepMatchServer) LoginUser(context.Context, *LoginUserReq
 }
 func (UnimplementedCineDeepMatchServer) CreateActivity(context.Context, *CreateActivityRequest) (*CreateActivityResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateActivity not implemented")
+}
+func (UnimplementedCineDeepMatchServer) CreateFavMovies(context.Context, *CreateFavMoviesRequest) (*CreateFavMoviesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateFavMovies not implemented")
 }
 func (UnimplementedCineDeepMatchServer) mustEmbedUnimplementedCineDeepMatchServer() {}
 
@@ -191,6 +206,24 @@ func _CineDeepMatch_CreateActivity_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CineDeepMatch_CreateFavMovies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateFavMoviesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CineDeepMatchServer).CreateFavMovies(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CineDeepMatch_CreateFavMovies_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CineDeepMatchServer).CreateFavMovies(ctx, req.(*CreateFavMoviesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CineDeepMatch_ServiceDesc is the grpc.ServiceDesc for CineDeepMatch service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -213,6 +246,10 @@ var CineDeepMatch_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateActivity",
 			Handler:    _CineDeepMatch_CreateActivity_Handler,
+		},
+		{
+			MethodName: "CreateFavMovies",
+			Handler:    _CineDeepMatch_CreateFavMovies_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

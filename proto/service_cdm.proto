@@ -8,6 +8,9 @@ import "rpc_login_user.proto";
 
 import "rpc_create_activity.proto";
 
+import "rpc_create_fav_movies.proto";
+
+
 
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
@@ -57,6 +60,11 @@ service CineDeepMatch {
           post: "/v1/create_activity"
           body: "*"
       };
-  };
-
+    };
+    rpc CreateFavMovies (CreateFavMoviesRequest) returns (CreateFavMoviesResponse) {
+      option (google.api.http) = {
+          post: "/v1/create_fav_movies"
+          body: "*"
+      };
+    };
 }
