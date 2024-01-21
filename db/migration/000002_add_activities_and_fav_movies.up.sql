@@ -33,8 +33,7 @@ CREATE TABLE "activities" (
 );
 
 CREATE TABLE "fav_movies" (
-  "id" uuid PRIMARY KEY,
-  "user_id" uuid NOT NULL,
+  "user_id" uuid NOT NULL PRIMARY KEY,
   "movies" varchar NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT 'now()'
 );

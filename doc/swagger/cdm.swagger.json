@@ -122,6 +122,36 @@
         ]
       }
     },
+    "/v1/get_fav_movies/{userId}": {
+      "get": {
+        "operationId": "CineDeepMatch_GetFavMovies",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetFavMoviesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "CineDeepMatch"
+        ]
+      }
+    },
     "/v1/login_user": {
       "post": {
         "operationId": "CineDeepMatch_LoginUser",
@@ -154,8 +184,46 @@
         ]
       }
     },
-    "/v1/update_user": {
-      "post": {
+    "/v1/update_fav_movies/{userId}": {
+      "put": {
+        "operationId": "CineDeepMatch_UpdateFavMovies",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbUpdateFavMoviesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CineDeepMatchUpdateFavMoviesBody"
+            }
+          }
+        ],
+        "tags": [
+          "CineDeepMatch"
+        ]
+      }
+    },
+    "/v1/update_user/{userId}": {
+      "put": {
         "operationId": "CineDeepMatch_UpdateUser",
         "responses": {
           "200": {
@@ -173,11 +241,17 @@
         },
         "parameters": [
           {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
             "name": "body",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/pbUpdateUserRequest"
+              "$ref": "#/definitions/CineDeepMatchUpdateUserBody"
             }
           }
         ],
@@ -188,6 +262,31 @@
     }
   },
   "definitions": {
+    "CineDeepMatchUpdateFavMoviesBody": {
+      "type": "object",
+      "properties": {
+        "movieIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "CineDeepMatchUpdateUserBody": {
+      "type": "object",
+      "properties": {
+        "fullName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
     "pbActivity": {
       "type": "object",
       "properties": {
@@ -298,6 +397,14 @@
         }
       }
     },
+    "pbGetFavMoviesResponse": {
+      "type": "object",
+      "properties": {
+        "favMovies": {
+          "$ref": "#/definitions/pbFavMovies"
+        }
+      }
+    },
     "pbLoginUserRequest": {
       "type": "object",
       "properties": {
@@ -334,20 +441,11 @@
         }
       }
     },
-    "pbUpdateUserRequest": {
+    "pbUpdateFavMoviesResponse": {
       "type": "object",
       "properties": {
-        "userId": {
-          "type": "string"
-        },
-        "fullName": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
+        "favMovies": {
+          "$ref": "#/definitions/pbFavMovies"
         }
       }
     },

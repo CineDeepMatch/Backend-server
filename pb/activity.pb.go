@@ -7,9 +7,9 @@
 package pb
 
 import (
-	timestamp "github.com/golang/protobuf/ptypes/timestamp"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 )
@@ -26,11 +26,11 @@ type Activity struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id            string               `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	UserId        string               `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	ViewPage      string               `protobuf:"bytes,3,opt,name=view_page,json=viewPage,proto3" json:"view_page,omitempty"`
-	Duration      int32                `protobuf:"varint,4,opt,name=duration,proto3" json:"duration,omitempty"`
-	PageVisitedAt *timestamp.Timestamp `protobuf:"bytes,5,opt,name=page_visited_at,json=pageVisitedAt,proto3" json:"page_visited_at,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	ViewPage      string                 `protobuf:"bytes,3,opt,name=view_page,json=viewPage,proto3" json:"view_page,omitempty"`
+	Duration      int32                  `protobuf:"varint,4,opt,name=duration,proto3" json:"duration,omitempty"`
+	PageVisitedAt *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=page_visited_at,json=pageVisitedAt,proto3" json:"page_visited_at,omitempty"`
 }
 
 func (x *Activity) Reset() {
@@ -93,7 +93,7 @@ func (x *Activity) GetDuration() int32 {
 	return 0
 }
 
-func (x *Activity) GetPageVisitedAt() *timestamp.Timestamp {
+func (x *Activity) GetPageVisitedAt() *timestamppb.Timestamp {
 	if x != nil {
 		return x.PageVisitedAt
 	}
@@ -137,8 +137,8 @@ func file_activity_proto_rawDescGZIP() []byte {
 
 var file_activity_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_activity_proto_goTypes = []interface{}{
-	(*Activity)(nil),            // 0: pb.Activity
-	(*timestamp.Timestamp)(nil), // 1: google.protobuf.Timestamp
+	(*Activity)(nil),              // 0: pb.Activity
+	(*timestamppb.Timestamp)(nil), // 1: google.protobuf.Timestamp
 }
 var file_activity_proto_depIdxs = []int32{
 	1, // 0: pb.Activity.page_visited_at:type_name -> google.protobuf.Timestamp

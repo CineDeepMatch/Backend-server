@@ -1,10 +1,9 @@
--- name: createFavMovies :one
+-- name: CreateFavMovies :one
 INSERT INTO fav_movies (
-  id ,
   user_id ,
   movies
 ) VALUES (
-    $1, $2, $3
+    $1, $2
 ) RETURNING *;
 
 -- name: GetFavMoviesByUserId :one
