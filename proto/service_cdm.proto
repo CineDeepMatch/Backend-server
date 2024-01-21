@@ -7,6 +7,7 @@ import "rpc_update_user.proto";
 import "rpc_login_user.proto";
 
 import "rpc_create_activity.proto";
+import "rpc_get_activities.proto";
 
 import "rpc_create_fav_movies.proto";
 import "rpc_get_fav_movies.proto";
@@ -64,6 +65,11 @@ service CineDeepMatch {
           body: "*"
       };
     };
+    rpc GetActivities (GetActivitiesRequest) returns (GetActivitiesResponse) {
+      option (google.api.http) = {
+          get: "/v1/get_activities/{user_id}"
+      };
+    };
     rpc CreateFavMovies (CreateFavMoviesRequest) returns (CreateFavMoviesResponse) {
       option (google.api.http) = {
           post: "/v1/create_fav_movies"
@@ -81,4 +87,5 @@ service CineDeepMatch {
           body: "*"
       };
     };
+    
 }

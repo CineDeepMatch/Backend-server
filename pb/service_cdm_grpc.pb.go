@@ -26,6 +26,7 @@ type CineDeepMatchClient interface {
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
 	LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserResponse, error)
 	CreateActivity(ctx context.Context, in *CreateActivityRequest, opts ...grpc.CallOption) (*CreateActivityResponse, error)
+	GetActivities(ctx context.Context, in *GetActivitiesRequest, opts ...grpc.CallOption) (*GetActivitiesResponse, error)
 	CreateFavMovies(ctx context.Context, in *CreateFavMoviesRequest, opts ...grpc.CallOption) (*CreateFavMoviesResponse, error)
 	GetFavMovies(ctx context.Context, in *GetFavMoviesRequest, opts ...grpc.CallOption) (*GetFavMoviesResponse, error)
 	UpdateFavMovies(ctx context.Context, in *UpdateFavMoviesRequest, opts ...grpc.CallOption) (*UpdateFavMoviesResponse, error)
@@ -75,6 +76,15 @@ func (c *cineDeepMatchClient) CreateActivity(ctx context.Context, in *CreateActi
 	return out, nil
 }
 
+func (c *cineDeepMatchClient) GetActivities(ctx context.Context, in *GetActivitiesRequest, opts ...grpc.CallOption) (*GetActivitiesResponse, error) {
+	out := new(GetActivitiesResponse)
+	err := c.cc.Invoke(ctx, "/pb.CineDeepMatch/GetActivities", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *cineDeepMatchClient) CreateFavMovies(ctx context.Context, in *CreateFavMoviesRequest, opts ...grpc.CallOption) (*CreateFavMoviesResponse, error) {
 	out := new(CreateFavMoviesResponse)
 	err := c.cc.Invoke(ctx, "/pb.CineDeepMatch/CreateFavMovies", in, out, opts...)
@@ -110,6 +120,7 @@ type CineDeepMatchServer interface {
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
 	LoginUser(context.Context, *LoginUserRequest) (*LoginUserResponse, error)
 	CreateActivity(context.Context, *CreateActivityRequest) (*CreateActivityResponse, error)
+	GetActivities(context.Context, *GetActivitiesRequest) (*GetActivitiesResponse, error)
 	CreateFavMovies(context.Context, *CreateFavMoviesRequest) (*CreateFavMoviesResponse, error)
 	GetFavMovies(context.Context, *GetFavMoviesRequest) (*GetFavMoviesResponse, error)
 	UpdateFavMovies(context.Context, *UpdateFavMoviesRequest) (*UpdateFavMoviesResponse, error)
@@ -131,6 +142,9 @@ func (UnimplementedCineDeepMatchServer) LoginUser(context.Context, *LoginUserReq
 }
 func (UnimplementedCineDeepMatchServer) CreateActivity(context.Context, *CreateActivityRequest) (*CreateActivityResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateActivity not implemented")
+}
+func (UnimplementedCineDeepMatchServer) GetActivities(context.Context, *GetActivitiesRequest) (*GetActivitiesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetActivities not implemented")
 }
 func (UnimplementedCineDeepMatchServer) CreateFavMovies(context.Context, *CreateFavMoviesRequest) (*CreateFavMoviesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateFavMovies not implemented")
@@ -226,6 +240,24 @@ func _CineDeepMatch_CreateActivity_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CineDeepMatch_GetActivities_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetActivitiesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CineDeepMatchServer).GetActivities(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.CineDeepMatch/GetActivities",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CineDeepMatchServer).GetActivities(ctx, req.(*GetActivitiesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _CineDeepMatch_CreateFavMovies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateFavMoviesRequest)
 	if err := dec(in); err != nil {
@@ -302,6 +334,10 @@ var CineDeepMatch_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateActivity",
 			Handler:    _CineDeepMatch_CreateActivity_Handler,
+		},
+		{
+			MethodName: "GetActivities",
+			Handler:    _CineDeepMatch_GetActivities_Handler,
 		},
 		{
 			MethodName: "CreateFavMovies",

@@ -122,6 +122,36 @@
         ]
       }
     },
+    "/v1/get_activities/{userId}": {
+      "get": {
+        "operationId": "CineDeepMatch_GetActivities",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetActivitiesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "CineDeepMatch"
+        ]
+      }
+    },
     "/v1/get_fav_movies/{userId}": {
       "get": {
         "operationId": "CineDeepMatch_GetFavMovies",
@@ -393,6 +423,18 @@
           "type": "array",
           "items": {
             "type": "string"
+          }
+        }
+      }
+    },
+    "pbGetActivitiesResponse": {
+      "type": "object",
+      "properties": {
+        "activities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/pbActivity"
           }
         }
       }

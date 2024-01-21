@@ -29,6 +29,20 @@ func convertActivity(activity db.Activity) *pb.Activity {
 	}
 }
 
+func convertActivities(activities []db.Activity) []*pb.Activity {
+	res := []*pb.Activity{}
+	for i := 0; i < len(activities); i++ {
+		res = append(res, &pb.Activity{
+			Id:            activities[i].ID.String(),
+			UserId:        activities[i].UserID.String(),
+			ViewPage:      activities[i].ViewPage,
+			Duration:      activities[i].Duration,
+			PageVisitedAt: timestamppb.New(activities[i].PageVisitedAt),
+		})
+	}
+	return res
+}
+
 func convertFavMovies(favMovies db.FavMovie) *pb.FavMovies {
 	return &pb.FavMovies{
 		UserId:   favMovies.UserID.String(),
