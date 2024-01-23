@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "github.com/CineDeepMatch/Backend-server/pb";
+
+message Movie {
+    string id = 1;
+    string title = 2;
+    repeated string characters = 3;
+    repeated string genres = 4;
+    double rating = 5;
+}

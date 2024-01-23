@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	db "github.com/CineDeepMatch/Backend-server/db/sqlc"
+	mongodb "github.com/CineDeepMatch/Backend-server/mongodb/repositories"
 	"github.com/CineDeepMatch/Backend-server/pb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -47,5 +48,15 @@ func convertFavMovies(favMovies db.FavMovie) *pb.FavMovies {
 	return &pb.FavMovies{
 		UserId:   favMovies.UserID.String(),
 		MovieIds: strings.Split(favMovies.Movies, " "),
+	}
+}
+
+func convertMovie(movie mongodb.Movie) *pb.Movie {
+	return &pb.Movie{
+		Id:         movie.ID,
+		Title:      movie.Title,
+		Characters: movie.Characters,
+		Genres:     movie.Genres,
+		Rating:     movie.Rating,
 	}
 }

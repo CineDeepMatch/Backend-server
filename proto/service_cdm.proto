@@ -6,6 +6,8 @@ import "rpc_create_user.proto";
 import "rpc_update_user.proto";
 import "rpc_login_user.proto";
 
+import "rpc_get_movie.proto";
+
 import "rpc_create_activity.proto";
 import "rpc_get_activities.proto";
 
@@ -68,6 +70,11 @@ service CineDeepMatch {
     rpc GetActivities (GetActivitiesRequest) returns (GetActivitiesResponse) {
       option (google.api.http) = {
           get: "/v1/get_activities/{user_id}"
+      };
+    };
+    rpc GetMovie (GetMovieRequest) returns (GetMovieResponse) {
+      option (google.api.http) = {
+          get: "/v1/get_movie/{movie_id}"
       };
     };
     rpc CreateFavMovies (CreateFavMoviesRequest) returns (CreateFavMoviesResponse) {

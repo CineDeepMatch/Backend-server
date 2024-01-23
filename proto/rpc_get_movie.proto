@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package pb;
+
+import "movie.proto";
+
+option go_package = "github.com/CineDeepMatch/Backend-server/pb";
+
+message GetMovieRequest {
+    string movie_id = 1;
+}
+
+message GetMovieResponse {
+    Movie movie = 1;
+}
+
