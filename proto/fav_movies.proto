@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "github.com/CineDeepMatch/Backend-server/pb";
+
+message FavMovies {
+    string user_id = 1;
+    repeated string movie_ids = 2;
+}

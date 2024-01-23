@@ -19,7 +19,6 @@ type Activity struct {
 }
 
 type FavMovie struct {
-	ID        uuid.UUID `json:"id"`
 	UserID    uuid.UUID `json:"user_id"`
 	Movies    string    `json:"movies"`
 	CreatedAt time.Time `json:"created_at"`

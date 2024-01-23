@@ -11,20 +11,36 @@ import (
 	"github.com/google/uuid"
 )
 
+const createFavMovies = `-- name: CreateFavMovies :one
+INSERT INTO fav_movies (
+  user_id ,
+  movies
+) VALUES (
+    $1, $2
+) RETURNING user_id, movies, created_at
+`
+
+type CreateFavMoviesParams struct {
+	UserID uuid.UUID `json:"user_id"`
+	Movies string    `json:"movies"`
+}
+
+func (q *Queries) CreateFavMovies(ctx context.Context, arg CreateFavMoviesParams) (FavMovie, error) {
+	row := q.db.QueryRow(ctx, createFavMovies, arg.UserID, arg.Movies)
+	var i FavMovie
+	err := row.Scan(&i.UserID, &i.Movies, &i.CreatedAt)
+	return i, err
+}
+
 const getFavMoviesByUserId = `-- name: GetFavMoviesByUserId :one
-SELECT id, user_id, movies, created_at FROM fav_movies
+SELECT user_id, movies, created_at FROM fav_movies
 WHERE user_id = $1 LIMIT 1
 `
 
 func (q *Queries) GetFavMoviesByUserId(ctx context.Context, userID uuid.UUID) (FavMovie, error) {
 	row := q.db.QueryRow(ctx, getFavMoviesByUserId, userID)
 	var i FavMovie
-	err := row.Scan(
-		&i.ID,
-		&i.UserID,
-		&i.Movies,
-		&i.CreatedAt,
-	)
+	err := row.Scan(&i.UserID, &i.Movies, &i.CreatedAt)
 	return i, err
 }
 
@@ -32,7 +48,7 @@ const updateFavMoviesByUserId = `-- name: UpdateFavMoviesByUserId :one
 UPDATE fav_movies 
 SET movies = $2
 WHERE user_id = $1
-RETURNING id, user_id, movies, created_at
+RETURNING user_id, movies, created_at
 `
 
 type UpdateFavMoviesByUserIdParams struct {
@@ -43,39 +59,6 @@ type UpdateFavMoviesByUserIdParams struct {
 func (q *Queries) UpdateFavMoviesByUserId(ctx context.Context, arg UpdateFavMoviesByUserIdParams) (FavMovie, error) {
 	row := q.db.QueryRow(ctx, updateFavMoviesByUserId, arg.UserID, arg.Movies)
 	var i FavMovie
-	err := row.Scan(
-		&i.ID,
-		&i.UserID,
-		&i.Movies,
-		&i.CreatedAt,
-	)
-	return i, err
-}
-
-const createFavMovies = `-- name: createFavMovies :one
-INSERT INTO fav_movies (
-  id ,
-  user_id ,
-  movies
-) VALUES (
-    $1, $2, $3
-) RETURNING id, user_id, movies, created_at
-`
-
-type createFavMoviesParams struct {
-	ID     uuid.UUID `json:"id"`
-	UserID uuid.UUID `json:"user_id"`
-	Movies string    `json:"movies"`
-}
-
-func (q *Queries) createFavMovies(ctx context.Context, arg createFavMoviesParams) (FavMovie, error) {
-	row := q.db.QueryRow(ctx, createFavMovies, arg.ID, arg.UserID, arg.Movies)
-	var i FavMovie
-	err := row.Scan(
-		&i.ID,
-		&i.UserID,
-		&i.Movies,
-		&i.CreatedAt,
-	)
+	err := row.Scan(&i.UserID, &i.Movies, &i.CreatedAt)
 	return i, err
 }

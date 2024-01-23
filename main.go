@@ -6,6 +6,8 @@ import (
 	"net/http"
 
 	"github.com/rs/zerolog/log"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
@@ -22,6 +24,7 @@ import (
 	db "github.com/CineDeepMatch/Backend-server/db/sqlc"
 	util "github.com/CineDeepMatch/Backend-server/db/utils"
 	"github.com/CineDeepMatch/Backend-server/gapi"
+	mongodb "github.com/CineDeepMatch/Backend-server/mongodb/repositories"
 	"github.com/CineDeepMatch/Backend-server/pb"
 )
 
@@ -32,16 +35,24 @@ func main() {
 
 	}
 	connPool, err := pgxpool.New(context.Background(), config.DBSource)
+
 	if err != nil {
 		log.Fatal().Err(err).Msg("cannot connect to db")
 	}
 
 	runDBMigration(config.MigrationURL, config.DBSource)
 
-	store := db.NewStore(connPool)
+	connMongoDB, err := mongo.Connect(context.TODO(), options.Client().ApplyURI((config.MongoDBSource)))
 
-	go runGatewayServer(config, store)
-	runGrpcServer(config, store)
+	if err != nil {
+		log.Fatal().Err(err).Msg("cannot connect to MongoDB")
+	}
+
+	store := db.NewStore(connPool)
+	mongoDBStore := mongodb.NewStore(connMongoDB, "CineDeepMatch", "Movies")
+
+	go runGatewayServer(config, store, mongoDBStore)
+	runGrpcServer(config, store, mongoDBStore)
 
 }
 
@@ -59,8 +70,8 @@ func runDBMigration(migrationURL string, dbSource string) {
 	log.Info().Msg("db migrated successfully")
 }
 
-func runGrpcServer(config util.Config, store db.Store) {
-	server, err := gapi.NewServer(config, store)
+func runGrpcServer(config util.Config, store db.Store, mongoDBStore mongodb.Store) {
+	server, err := gapi.NewServer(config, store, mongoDBStore)
 	if err != nil {
 		log.Fatal().Err(err).Msg("cannot create server")
 	}
@@ -84,8 +95,8 @@ func runGrpcServer(config util.Config, store db.Store) {
 	}
 }
 
-func runGatewayServer(config util.Config, store db.Store) {
-	server, err := gapi.NewServer(config, store)
+func runGatewayServer(config util.Config, store db.Store, mongoDBStore mongodb.Store) {
+	server, err := gapi.NewServer(config, store, mongoDBStore)
 	if err != nil {
 		log.Fatal().Err(err).Msg("cannot create server")
 	}

@@ -16,4 +16,3 @@ message UpdateUserRequest {
 message UpdateUserResponse {
     User user = 1;
 }
-

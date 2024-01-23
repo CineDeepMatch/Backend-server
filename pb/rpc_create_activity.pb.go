@@ -7,9 +7,9 @@
 package pb
 
 import (
-	timestamp "github.com/golang/protobuf/ptypes/timestamp"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 )
@@ -26,10 +26,10 @@ type CreateActivityRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	UserId        string               `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	ViewPage      string               `protobuf:"bytes,2,opt,name=view_page,json=viewPage,proto3" json:"view_page,omitempty"`
-	Duration      int32                `protobuf:"varint,3,opt,name=duration,proto3" json:"duration,omitempty"`
-	PageVisitedAt *timestamp.Timestamp `protobuf:"bytes,4,opt,name=page_visited_at,json=pageVisitedAt,proto3" json:"page_visited_at,omitempty"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	ViewPage      string                 `protobuf:"bytes,2,opt,name=view_page,json=viewPage,proto3" json:"view_page,omitempty"`
+	Duration      int32                  `protobuf:"varint,3,opt,name=duration,proto3" json:"duration,omitempty"`
+	PageVisitedAt *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=page_visited_at,json=pageVisitedAt,proto3" json:"page_visited_at,omitempty"`
 }
 
 func (x *CreateActivityRequest) Reset() {
@@ -85,7 +85,7 @@ func (x *CreateActivityRequest) GetDuration() int32 {
 	return 0
 }
 
-func (x *CreateActivityRequest) GetPageVisitedAt() *timestamp.Timestamp {
+func (x *CreateActivityRequest) GetPageVisitedAt() *timestamppb.Timestamp {
 	if x != nil {
 		return x.PageVisitedAt
 	}
@@ -184,7 +184,7 @@ var file_rpc_create_activity_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_rpc_create_activity_proto_goTypes = []interface{}{
 	(*CreateActivityRequest)(nil),  // 0: pb.CreateActivityRequest
 	(*CreateActivityResponse)(nil), // 1: pb.CreateActivityResponse
-	(*timestamp.Timestamp)(nil),    // 2: google.protobuf.Timestamp
+	(*timestamppb.Timestamp)(nil),  // 2: google.protobuf.Timestamp
 	(*Activity)(nil),               // 3: pb.Activity
 }
 var file_rpc_create_activity_proto_depIdxs = []int32{

@@ -12,6 +12,7 @@ import (
 
 type Querier interface {
 	CreateActivity(ctx context.Context, arg CreateActivityParams) (Activity, error)
+	CreateFavMovies(ctx context.Context, arg CreateFavMoviesParams) (FavMovie, error)
 	CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
 	GetActivitiesByUserId(ctx context.Context, userID uuid.UUID) ([]Activity, error)
@@ -22,7 +23,6 @@ type Querier interface {
 	UpdateFavMoviesByUserId(ctx context.Context, arg UpdateFavMoviesByUserIdParams) (FavMovie, error)
 	UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error)
 	UpdateUserById(ctx context.Context, arg UpdateUserByIdParams) (User, error)
-	createFavMovies(ctx context.Context, arg createFavMoviesParams) (FavMovie, error)
 }
 
 var _ Querier = (*Queries)(nil)
