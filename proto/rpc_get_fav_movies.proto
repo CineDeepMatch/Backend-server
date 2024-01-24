@@ -13,4 +13,3 @@ message GetFavMoviesRequest {
 message GetFavMoviesResponse {
     FavMovies fav_movies = 1;
 }
-
