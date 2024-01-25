@@ -3,17 +3,18 @@ services:
   postgres: 
     image: postgres:12-alpine
     environment:
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=mysecretpassword
-      - POSTGRES_DB=simple_bank
+      - POSTGRES_USER=dat
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=cine-deep-match
   api:
     build: 
       context: .
       dockerfile: Dockerfile
     ports: 
       - "8080:8080"
+      - "9090:9090"
     environment:
-      - DB_SOURCE=postgresql://root:mysecretpassword@postgres:5432/simple_bank?sslmode=disable
+      - DB_SOURCE=postgresql://dat:secret@postgres:5432/cine-deep-match?sslmode=disable
     depends_on:
       - postgres
     entrypoint: [ "/app/wait-for.sh", "postgres:5432", "--", "/app/start.sh"]
