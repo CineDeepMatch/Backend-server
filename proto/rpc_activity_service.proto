@@ -7,6 +7,7 @@ import "activity.proto";
 
 option go_package = "github.com/CineDeepMatch/Backend-server/pb";
 
+// Create Activity
 message CreateActivityRequest {
     string user_id = 1;
     string view_page = 2;
@@ -18,3 +19,11 @@ message CreateActivityResponse {
     Activity activity = 1;
 }
 
+// Get Activities
+message GetActivitiesRequest {
+    string user_id = 1;
+}
+
+message GetActivitiesResponse {
+    repeated Activity activities = 1;
+}

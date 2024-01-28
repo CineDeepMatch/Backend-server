@@ -48,3 +48,19 @@ func (server *Server) CreateActivity(ctx context.Context, req *pb.CreateActivity
 	}
 	return rsp, nil
 }
+
+func (server *Server) GetActivities(ctx context.Context, req *pb.GetActivitiesRequest) (*pb.GetActivitiesResponse, error) {
+	userId := uuid.MustParse(req.GetUserId())
+
+	activities, err := server.store.GetActivitiesByUserId(ctx, userId)
+
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get user's activities: %s", err)
+	}
+
+	rsp := &pb.GetActivitiesResponse{
+		Activities: convertActivities(activities),
+	}
+
+	return rsp, nil
+}

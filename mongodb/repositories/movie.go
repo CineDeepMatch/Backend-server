@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func (q *Queries) CreateMovie(ctx context.Context, doc *Movie) (Movie, error) {
@@ -28,4 +29,21 @@ func (q *Queries) GetMovieById(ctx context.Context, id string) (Movie, error) {
 	filter := bson.M{"_id": id}
 	err := q.coll.FindOne(context.TODO(), filter).Decode(&movie)
 	return movie, err
+}
+
+func (q *Queries) GetManyMovies(ctx context.Context, pageNumber int64, pageSize int64) ([]Movie, error) {
+	var movies []Movie
+
+	skip := (pageNumber - 1) * pageSize
+
+	findOptions := options.Find().SetSkip(int64(skip)).SetLimit(int64(pageSize))
+
+	cursor, err := q.coll.Find(context.Background(), bson.D{}, findOptions)
+	if err != nil {
+		return movies, err
+	}
+
+	err = cursor.All(context.TODO(), &movies)
+
+	return movies, err
 }

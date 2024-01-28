@@ -2,20 +2,10 @@ syntax = "proto3";
 
 package pb;
 
-import "rpc_create_user.proto";
-import "rpc_update_user.proto";
-import "rpc_login_user.proto";
-
-import "rpc_get_movie.proto";
-
-import "rpc_create_activity.proto";
-import "rpc_get_activities.proto";
-
-import "rpc_create_fav_movies.proto";
-import "rpc_get_fav_movies.proto";
-import "rpc_update_fav_movies.proto";
-
-
+import "rpc_user_service.proto";
+import "rpc_activity_service.proto";
+import "rpc_movie_service.proto";
+import "rpc_fav_movies_service.proto";
 
 
 import "google/api/annotations.proto";
@@ -75,6 +65,11 @@ service CineDeepMatch {
     rpc GetMovie (GetMovieRequest) returns (GetMovieResponse) {
       option (google.api.http) = {
           get: "/v1/get_movie/{movie_id}"
+      };
+    };
+    rpc GetManyMovies (GetManyMoviesRequest) returns (GetManyMoviesResponse) {
+      option (google.api.http) = {
+          get: "/v1/get_movies"
       };
     };
     rpc CreateFavMovies (CreateFavMoviesRequest) returns (CreateFavMoviesResponse) {

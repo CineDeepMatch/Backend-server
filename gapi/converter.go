@@ -60,3 +60,17 @@ func convertMovie(movie mongodb.Movie) *pb.Movie {
 		Rating:     movie.Rating,
 	}
 }
+
+func convertMovies(movies []mongodb.Movie) []*pb.Movie {
+	res := []*pb.Movie{}
+	for i := 0; i < len(movies); i++ {
+		res = append(res, &pb.Movie{
+			Id:         movies[i].ID,
+			Title:      movies[i].Title,
+			Characters: movies[i].Characters,
+			Genres:     movies[i].Genres,
+			Rating:     movies[i].Rating,
+		})
+	}
+	return res
+}

@@ -1,8 +1,6 @@
 package gapi
 
 import (
-	"fmt"
-
 	db "github.com/CineDeepMatch/Backend-server/db/sqlc"
 	util "github.com/CineDeepMatch/Backend-server/db/utils"
 	mongodb "github.com/CineDeepMatch/Backend-server/mongodb/repositories"
@@ -10,7 +8,7 @@ import (
 	"github.com/CineDeepMatch/Backend-server/token"
 )
 
-type Server struct {
+type AuthServer struct {
 	pb.UnimplementedCineDeepMatchServer
 	config       util.Config
 	store        db.Store
@@ -18,14 +16,8 @@ type Server struct {
 	mongoDBStore mongodb.Store
 }
 
-func NewServer(config util.Config, store db.Store, mongoDBStore mongodb.Store) (*Server, error) {
-	tokenMaker, err := token.NewPasetoMaker(config.TokenSymmetricKey)
-
-	if err != nil {
-		return nil, fmt.Errorf("cannot create token maker %w", err)
-	}
-
-	server := &Server{
+func NewAuthServer(config util.Config, store db.Store, mongoDBStore mongodb.Store, tokenMaker token.Maker) (*AuthServer, error) {
+	server := &AuthServer{
 		config:       config,
 		store:        store,
 		mongoDBStore: mongoDBStore,
