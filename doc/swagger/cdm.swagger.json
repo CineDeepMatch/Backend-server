@@ -212,6 +212,44 @@
         ]
       }
     },
+    "/v1/get_movies": {
+      "get": {
+        "operationId": "CineDeepMatch_GetManyMovies",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetManyMoviesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "CineDeepMatch"
+        ]
+      }
+    },
     "/v1/login_user": {
       "post": {
         "operationId": "CineDeepMatch_LoginUser",
@@ -331,7 +369,8 @@
             "type": "string"
           }
         }
-      }
+      },
+      "title": "Update Fav Movies"
     },
     "CineDeepMatchUpdateUserBody": {
       "type": "object",
@@ -345,7 +384,8 @@
         "password": {
           "type": "string"
         }
-      }
+      },
+      "title": "Update User"
     },
     "pbActivity": {
       "type": "object",
@@ -386,7 +426,8 @@
           "type": "string",
           "format": "date-time"
         }
-      }
+      },
+      "title": "Create Activity"
     },
     "pbCreateActivityResponse": {
       "type": "object",
@@ -408,7 +449,8 @@
             "type": "string"
           }
         }
-      }
+      },
+      "title": "Create Fav Movies"
     },
     "pbCreateFavMoviesResponse": {
       "type": "object",
@@ -433,7 +475,8 @@
         "password": {
           "type": "string"
         }
-      }
+      },
+      "title": "Create User"
     },
     "pbCreateUserResponse": {
       "type": "object",
@@ -477,6 +520,18 @@
         }
       }
     },
+    "pbGetManyMoviesResponse": {
+      "type": "object",
+      "properties": {
+        "movies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/pbMovie"
+          }
+        }
+      }
+    },
     "pbGetMovieResponse": {
       "type": "object",
       "properties": {
@@ -494,7 +549,8 @@
         "password": {
           "type": "string"
         }
-      }
+      },
+      "title": "Login User"
     },
     "pbLoginUserResponse": {
       "type": "object",

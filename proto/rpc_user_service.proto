@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/timestamp.proto";
+import "user.proto";
+
+option go_package = "github.com/CineDeepMatch/Backend-server/pb";
+
+// Create User
+message CreateUserRequest {
+    string username = 1;
+    string full_name = 2;
+    string email = 3;
+    string password = 4;
+}
+
+message CreateUserResponse {
+    User user = 1;
+}
+
+// Update User
+message UpdateUserRequest {
+    string user_id = 1;
+    optional string full_name = 2;
+    optional string email = 3;
+    optional string password = 4;
+}
+
+message UpdateUserResponse {
+    User user = 1;
+}
+
+// Login User
+message LoginUserRequest {
+    string username = 1;
+    string password = 2;
+}
+
+message LoginUserResponse {
+    string session_id = 1;
+    string access_token = 2;
+    google.protobuf.Timestamp access_token_expires_at = 3;
+    string refresh_token = 4;
+    google.protobuf.Timestamp refresh_token_expires_at = 5;
+    User user = 6;
+}

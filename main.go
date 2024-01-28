@@ -138,3 +138,41 @@ func runGatewayServer(config util.Config, store db.Store, mongoDBStore mongodb.S
 		log.Fatal().Err(err).Msg("cannot start HTTP gateway server")
 	}
 }
+
+// func runGrpcServerWithAuth(config util.Config, store db.Store, mongoDBStore mongodb.Store) {
+// 	tokenMaker, err := token.NewPasetoMaker(config.TokenSymmetricKey)
+
+// 	if err != nil {
+// 		log.Fatal().Err(err).Msg("cannot create token maker")
+// 	}
+
+// 	server, err := gapi.NewAuthServer(config, store, mongoDBStore, tokenMaker)
+// 	if err != nil {
+// 		log.Fatal().Err(err).Msg("cannot create server")
+// 	}
+
+// 	interceptor := gapi.NewAuthInterceptor(tokenMaker)
+
+// 	serverOptions := []grpc.ServerOption{
+// 		grpc.UnaryInterceptor(interceptor.Unary()),
+// 	}
+
+// 	grpcServer := grpc.NewServer(serverOptions...)
+
+// 	pb.RegisterCineDeepMatchServer(grpcServer, server)
+// 	reflection.Register(grpcServer)
+
+// 	listener, err := net.Listen("tcp", config.GRPCServerAddress)
+
+// 	if err != nil {
+// 		log.Fatal().Err(err).Msg("cannot create listener")
+// 	}
+
+// 	log.Info().Msgf("start gRPC server at %s", listener.Addr().String())
+
+// 	err = grpcServer.Serve(listener)
+
+// 	if err != nil {
+// 		log.Fatal().Err(err).Msg("cannot start gRPC server")
+// 	}
+// }

@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package pb;
+
+import "fav_movies.proto";
+
+option go_package = "github.com/CineDeepMatch/Backend-server/pb";
+
+// Create Fav Movies
+message CreateFavMoviesRequest {
+    string user_id = 1;
+    repeated string movie_ids = 2;
+}
+
+message CreateFavMoviesResponse {
+    FavMovies fav_movies = 1;
+}
+
+// Get Fav Movies
+message GetFavMoviesRequest {
+    string user_id = 1;
+}
+
+message GetFavMoviesResponse {
+    FavMovies fav_movies = 1;
+}
+
+// Update Fav Movies
+message UpdateFavMoviesRequest {
+    string user_id = 1;
+    repeated string movie_ids = 2;
+}
+
+message UpdateFavMoviesResponse {
+    FavMovies fav_movies = 1;
+}
