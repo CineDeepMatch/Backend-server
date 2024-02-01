@@ -6,8 +6,6 @@ services:
       - POSTGRES_USER=dat
       - POSTGRES_PASSWORD=secret
       - POSTGRES_DB=cine-deep-match
-    ports:
-      - "5432:5432"
   api:
     build: 
       context: .
