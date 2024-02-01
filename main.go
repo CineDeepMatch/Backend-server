@@ -20,7 +20,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/protobuf/encoding/protojson"
-
+	"github.com/rs/cors"
 	db "github.com/CineDeepMatch/Backend-server/db/sqlc"
 	util "github.com/CineDeepMatch/Backend-server/db/utils"
 	"github.com/CineDeepMatch/Backend-server/gapi"
@@ -126,14 +126,9 @@ func runGatewayServer(config util.Config, store db.Store, mongoDBStore mongodb.S
 	fs := http.FileServer(http.Dir("./doc/swagger"))
 	mux.Handle("/swagger/", http.StripPrefix("/swagger/", fs))
 
-	listener, err := net.Listen("tcp", config.HTTPServerAddress)
-	if err != nil {
-		log.Fatal().Err(err).Msg("cannot create listener")
+	handler := cors.Default().Handler(mux)
+	err = http.ListenAndServe(config.HTTPServerAddress, handler)
 
-	}
-
-	log.Info().Msgf("start HTTP gateway server at %s", listener.Addr().String())
-	err = http.Serve(listener, mux)
 	if err != nil {
 		log.Fatal().Err(err).Msg("cannot start HTTP gateway server")
 	}
