@@ -15,6 +15,7 @@ type Querier interface {
 	CreateFavMovies(ctx context.Context, arg CreateFavMoviesParams) (FavMovie, error)
 	CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
+	CreateVerifyEmail(ctx context.Context, arg CreateVerifyEmailParams) (VerifyEmail, error)
 	GetActivitiesByUserId(ctx context.Context, userID uuid.UUID) ([]Activity, error)
 	GetFavMoviesByUserId(ctx context.Context, userID uuid.UUID) (FavMovie, error)
 	GetSession(ctx context.Context, id uuid.UUID) (Session, error)
@@ -23,6 +24,7 @@ type Querier interface {
 	UpdateFavMoviesByUserId(ctx context.Context, arg UpdateFavMoviesByUserIdParams) (FavMovie, error)
 	UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error)
 	UpdateUserById(ctx context.Context, arg UpdateUserByIdParams) (User, error)
+	UpdateVerifyEmail(ctx context.Context, arg UpdateVerifyEmailParams) (VerifyEmail, error)
 }
 
 var _ Querier = (*Queries)(nil)
