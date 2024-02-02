@@ -5,6 +5,7 @@ import (
 	"net"
 	"net/http"
 
+	"github.com/hibiken/asynq"
 	"github.com/rs/zerolog/log"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -17,15 +18,17 @@ import (
 	_ "github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
-	"google.golang.org/protobuf/encoding/protojson"
-	"github.com/rs/cors"
 	db "github.com/CineDeepMatch/Backend-server/db/sqlc"
 	util "github.com/CineDeepMatch/Backend-server/db/utils"
 	"github.com/CineDeepMatch/Backend-server/gapi"
+	"github.com/CineDeepMatch/Backend-server/mail"
 	mongodb "github.com/CineDeepMatch/Backend-server/mongodb/repositories"
 	"github.com/CineDeepMatch/Backend-server/pb"
+	"github.com/CineDeepMatch/Backend-server/worker"
+	"github.com/rs/cors"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 func main() {
@@ -49,10 +52,17 @@ func main() {
 	}
 
 	store := db.NewStore(connPool)
+
+	redisOpt := asynq.RedisClientOpt{
+		Addr: config.RedisServerAddress,
+	}
+	taskDistributor := worker.NewRedisTaskDistributor(redisOpt)
+
 	mongoDBStore := mongodb.NewStore(connMongoDB, "CineDeepMatch", "Movies")
 
-	go runGatewayServer(config, store, mongoDBStore)
-	runGrpcServer(config, store, mongoDBStore)
+	go runTaskProcessor(config, redisOpt, store)
+	go runGatewayServer(config, store, mongoDBStore, taskDistributor)
+	runGrpcServer(config, store, mongoDBStore, taskDistributor)
 
 }
 
@@ -70,8 +80,18 @@ func runDBMigration(migrationURL string, dbSource string) {
 	log.Info().Msg("db migrated successfully")
 }
 
-func runGrpcServer(config util.Config, store db.Store, mongoDBStore mongodb.Store) {
-	server, err := gapi.NewServer(config, store, mongoDBStore)
+func runTaskProcessor(config util.Config, redisOpt asynq.RedisClientOpt, store db.Store) {
+	mailer := mail.NewGmailSender(config.EmailSenderName, config.EmailSenderAddress, config.EmailSenderPassword)
+	taskProcessor := worker.NewRedisTaskProcessor(redisOpt, store, mailer)
+	log.Info().Msg("start task processor")
+	err := taskProcessor.Start()
+	if err != nil {
+		log.Fatal().Err(err).Msg("failed to start task processor")
+	}
+}
+
+func runGrpcServer(config util.Config, store db.Store, mongoDBStore mongodb.Store, taskDistributor worker.TaskDistributor) {
+	server, err := gapi.NewServer(config, store, mongoDBStore, taskDistributor)
 	if err != nil {
 		log.Fatal().Err(err).Msg("cannot create server")
 	}
@@ -95,8 +115,8 @@ func runGrpcServer(config util.Config, store db.Store, mongoDBStore mongodb.Stor
 	}
 }
 
-func runGatewayServer(config util.Config, store db.Store, mongoDBStore mongodb.Store) {
-	server, err := gapi.NewServer(config, store, mongoDBStore)
+func runGatewayServer(config util.Config, store db.Store, mongoDBStore mongodb.Store, taskDistributor worker.TaskDistributor) {
+	server, err := gapi.NewServer(config, store, mongoDBStore, taskDistributor)
 	if err != nil {
 		log.Fatal().Err(err).Msg("cannot create server")
 	}
@@ -127,6 +147,8 @@ func runGatewayServer(config util.Config, store db.Store, mongoDBStore mongodb.S
 	mux.Handle("/swagger/", http.StripPrefix("/swagger/", fs))
 
 	handler := cors.Default().Handler(mux)
+	log.Info().Msgf("start gRPC server at %s", config.HTTPServerAddress)
+
 	err = http.ListenAndServe(config.HTTPServerAddress, handler)
 
 	if err != nil {
