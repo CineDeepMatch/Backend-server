@@ -28,8 +28,6 @@ test:
 	go test -v -cover -short ./...
 server:
 	go run main.go
-dockerserver:
-	docker run --name simplebank --network bank-network -p 8080:8080 -e GIN_MODE=release -e DB_SOURCE="postgresql://dat:secret@postgres:5432/cine-deep-match?sslmode=disable" simplebank:latest
 mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/CineDeepMatch/Backend-server/db/sqlc Store
 new_migration:
@@ -46,6 +44,13 @@ evans:
 	evans --host localhost --port 9090 -r repl
 redis:
 	docker run --name redis -p 6379:6379 -d redis:7-alpine
-.PHONY: createdb dropdb postgres migrateup migratedown sqlc test server mock migrateup1 migratedown1 new_migration dockerserver proto evans redis
+deploy_server:
+	docker compose up
+delete_server:
+	docker compose down
+	docker rmi backend-server-api:latest
+	docker rmi redis:7-alpine
+	docker rmi postgres:14-alpine
+.PHONY: createdb dropdb postgres migrateup migratedown sqlc test server mock migrateup1 migratedown1 new_migration dockerserver proto evans redis deploy_server delete_server
 
 	

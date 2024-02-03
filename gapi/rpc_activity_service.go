@@ -13,15 +13,15 @@ import (
 func (server *Server) CreateActivity(ctx context.Context, req *pb.CreateActivityRequest) (*pb.CreateActivityResponse, error) {
 	userId := uuid.MustParse(req.GetUserId())
 
-	authPayload, err := server.authorizeUser(ctx)
+	// authPayload, err := server.authorizeUser(ctx)
 
-	if err != nil {
-		return nil, unauthenticatedError(err)
-	}
+	// if err != nil {
+	// 	return nil, unauthenticatedError(err)
+	// }
 
-	if authPayload.UserId != userId {
-		return nil, status.Errorf(codes.PermissionDenied, "cannot create other user's activity")
-	}
+	// if authPayload.UserId != userId {
+	// 	return nil, status.Errorf(codes.PermissionDenied, "cannot create other user's activity")
+	// }
 
 	activityId, err := uuid.NewRandom()
 
