@@ -553,7 +553,11 @@
       "type": "object",
       "properties": {
         "favMovies": {
-          "$ref": "#/definitions/pbFavMovies"
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/pbMovie"
+          }
         }
       }
     },

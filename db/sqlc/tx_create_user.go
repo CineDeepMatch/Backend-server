@@ -4,11 +4,13 @@ import "context"
 
 type CreateUserTxParams struct {
 	CreateUserParams
+	CreateFavMoviesParams
 	AfterCreate func(user User) error
 }
 
 type CreateUserTxResult struct {
-	User User
+	User     User
+	FavMovie FavMovie
 }
 
 func (store *SQLStore) CreateUserTx(ctx context.Context, arg CreateUserTxParams) (CreateUserTxResult, error) {
@@ -22,6 +24,11 @@ func (store *SQLStore) CreateUserTx(ctx context.Context, arg CreateUserTxParams)
 			return err
 		}
 
+		result.FavMovie, err = q.CreateFavMovies(ctx, arg.CreateFavMoviesParams)
+		
+		if err != nil {
+			return err
+		}
 		return arg.AfterCreate(result.User)
 	})
 

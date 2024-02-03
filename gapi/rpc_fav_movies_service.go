@@ -21,8 +21,16 @@ func (server *Server) GetFavMovies(ctx context.Context, req *pb.GetFavMoviesRequ
 		return nil, status.Errorf(codes.Internal, "failed to get user's favorite movies: %s", err)
 	}
 
+	favMovieIds := strings.Split(favMovies.Movies, " ")
+
+	movies, err := server.mongoDBStore.GetMovieByIds(ctx, favMovieIds)
+
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get movies: %s", err)
+	}
+
 	rsp := &pb.GetFavMoviesResponse{
-		FavMovies: convertFavMovies(favMovies),
+		FavMovies: convertMovies(movies),
 	}
 
 	return rsp, nil

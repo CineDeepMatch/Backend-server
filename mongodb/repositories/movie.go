@@ -31,6 +31,25 @@ func (q *Queries) GetMovieById(ctx context.Context, id string) (Movie, error) {
 	return movie, err
 }
 
+func (q *Queries) GetMovieByIds(ctx context.Context, ids []string) ([]Movie, error) {
+	var movies []Movie
+	filter := bson.M{"_id": bson.M{"$in": ids}}
+
+	// Perform the query
+	cursor, err := q.coll.Find(ctx, filter)
+	if err != nil {
+		return movies, err
+	}
+	defer cursor.Close(ctx)
+
+	if err != nil {
+		return movies, err
+	}
+
+	err = cursor.All(context.TODO(), &movies)
+	return movies, err
+}
+
 func (q *Queries) GetManyMovies(ctx context.Context, pageNumber int64, pageSize int64) ([]Movie, error) {
 	var movies []Movie
 
