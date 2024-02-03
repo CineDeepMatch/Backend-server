@@ -3,6 +3,8 @@ syntax = "proto3";
 package pb;
 
 import "fav_movies.proto";
+import "movie.proto";
+
 
 option go_package = "github.com/CineDeepMatch/Backend-server/pb";
 
@@ -22,7 +24,7 @@ message GetFavMoviesRequest {
 }
 
 message GetFavMoviesResponse {
-    FavMovies fav_movies = 1;
+    repeated Movie movies = 1;
 }
 
 // Update Fav Movies

@@ -46,6 +46,10 @@ func (server *Server) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 			FullName:       req.GetFullName(),
 			Email:          req.GetEmail(),
 		},
+		CreateFavMoviesParams: db.CreateFavMoviesParams{
+			UserID: userId,
+			Movies: "",
+		},
 		AfterCreate: func(user db.User) error {
 			taskPayload := &worker.PayloadSendVerifyEmail{
 				Username: user.Username,
