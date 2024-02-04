@@ -33,6 +33,7 @@ type CineDeepMatchClient interface {
 	GetFavMovies(ctx context.Context, in *GetFavMoviesRequest, opts ...grpc.CallOption) (*GetFavMoviesResponse, error)
 	UpdateFavMovies(ctx context.Context, in *UpdateFavMoviesRequest, opts ...grpc.CallOption) (*UpdateFavMoviesResponse, error)
 	VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*VerifyEmailResponse, error)
+	RenewAccessToken(ctx context.Context, in *RenewAccessTokenRequest, opts ...grpc.CallOption) (*RenewAccessTokenResponse, error)
 }
 
 type cineDeepMatchClient struct {
@@ -142,6 +143,15 @@ func (c *cineDeepMatchClient) VerifyEmail(ctx context.Context, in *VerifyEmailRe
 	return out, nil
 }
 
+func (c *cineDeepMatchClient) RenewAccessToken(ctx context.Context, in *RenewAccessTokenRequest, opts ...grpc.CallOption) (*RenewAccessTokenResponse, error) {
+	out := new(RenewAccessTokenResponse)
+	err := c.cc.Invoke(ctx, "/pb.CineDeepMatch/RenewAccessToken", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CineDeepMatchServer is the server API for CineDeepMatch service.
 // All implementations must embed UnimplementedCineDeepMatchServer
 // for forward compatibility
@@ -157,6 +167,7 @@ type CineDeepMatchServer interface {
 	GetFavMovies(context.Context, *GetFavMoviesRequest) (*GetFavMoviesResponse, error)
 	UpdateFavMovies(context.Context, *UpdateFavMoviesRequest) (*UpdateFavMoviesResponse, error)
 	VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error)
+	RenewAccessToken(context.Context, *RenewAccessTokenRequest) (*RenewAccessTokenResponse, error)
 	mustEmbedUnimplementedCineDeepMatchServer()
 }
 
@@ -196,6 +207,9 @@ func (UnimplementedCineDeepMatchServer) UpdateFavMovies(context.Context, *Update
 }
 func (UnimplementedCineDeepMatchServer) VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyEmail not implemented")
+}
+func (UnimplementedCineDeepMatchServer) RenewAccessToken(context.Context, *RenewAccessTokenRequest) (*RenewAccessTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RenewAccessToken not implemented")
 }
 func (UnimplementedCineDeepMatchServer) mustEmbedUnimplementedCineDeepMatchServer() {}
 
@@ -408,6 +422,24 @@ func _CineDeepMatch_VerifyEmail_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CineDeepMatch_RenewAccessToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RenewAccessTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CineDeepMatchServer).RenewAccessToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.CineDeepMatch/RenewAccessToken",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CineDeepMatchServer).RenewAccessToken(ctx, req.(*RenewAccessTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CineDeepMatch_ServiceDesc is the grpc.ServiceDesc for CineDeepMatch service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -458,6 +490,10 @@ var CineDeepMatch_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "VerifyEmail",
 			Handler:    _CineDeepMatch_VerifyEmail_Handler,
+		},
+		{
+			MethodName: "RenewAccessToken",
+			Handler:    _CineDeepMatch_RenewAccessToken_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

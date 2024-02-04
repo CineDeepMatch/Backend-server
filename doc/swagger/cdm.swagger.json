@@ -282,6 +282,38 @@
         ]
       }
     },
+    "/v1/renew_access_token": {
+      "post": {
+        "operationId": "CineDeepMatch_RenewAccessToken",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbRenewAccessTokenResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbRenewAccessTokenRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CineDeepMatch"
+        ]
+      }
+    },
     "/v1/update_fav_movies/{userId}": {
       "put": {
         "operationId": "CineDeepMatch_UpdateFavMovies",
@@ -552,7 +584,7 @@
     "pbGetFavMoviesResponse": {
       "type": "object",
       "properties": {
-        "favMovies": {
+        "movies": {
           "type": "array",
           "items": {
             "type": "object",
@@ -642,6 +674,34 @@
         "rating": {
           "type": "number",
           "format": "double"
+        }
+      }
+    },
+    "pbRenewAccessTokenRequest": {
+      "type": "object",
+      "properties": {
+        "refreshToken": {
+          "type": "string"
+        }
+      }
+    },
+    "pbRenewAccessTokenResponse": {
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "$ref": "#/definitions/pbToken"
+        }
+      }
+    },
+    "pbToken": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "expiresAt": {
+          "type": "string",
+          "format": "date-time"
         }
       }
     },

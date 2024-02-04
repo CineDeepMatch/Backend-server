@@ -2,6 +2,7 @@ package gapi
 
 import (
 	"strings"
+	"time"
 
 	db "github.com/CineDeepMatch/Backend-server/db/sqlc"
 	mongodb "github.com/CineDeepMatch/Backend-server/mongodb/repositories"
@@ -73,4 +74,11 @@ func convertMovies(movies []mongodb.Movie) []*pb.Movie {
 		})
 	}
 	return res
+}
+
+func convertToken(accessToken string, expiresAt time.Time) *pb.Token {
+	return &pb.Token{
+		Token:     accessToken,
+		ExpiresAt: timestamppb.New(expiresAt),
+	}
 }

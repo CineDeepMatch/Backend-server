@@ -7,8 +7,7 @@ import "rpc_activity_service.proto";
 import "rpc_movie_service.proto";
 import "rpc_fav_movies_service.proto";
 import "rpc_verify_email.proto";
-
-
+import "rpc_token_service.proto";
 
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
@@ -96,5 +95,10 @@ service CineDeepMatch {
           get: "/v1/verify_email"
       };
     };  
-    
+    rpc RenewAccessToken (RenewAccessTokenRequest) returns (RenewAccessTokenResponse) {
+      option (google.api.http) = {
+          post: "/v1/renew_access_token"
+          body: "*"
+      };
+    }; 
 }
