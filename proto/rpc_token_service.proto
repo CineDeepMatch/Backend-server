@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package pb;
+
+import "token.proto";
+
+option go_package = "github.com/CineDeepMatch/Backend-server/pb";
+
+message RenewAccessTokenRequest  {
+    string refresh_token = 1;
+}
+
+message RenewAccessTokenResponse {
+    Token access_token = 1;
+}

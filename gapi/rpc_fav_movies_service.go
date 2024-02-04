@@ -30,7 +30,7 @@ func (server *Server) GetFavMovies(ctx context.Context, req *pb.GetFavMoviesRequ
 	}
 
 	rsp := &pb.GetFavMoviesResponse{
-		FavMovies: convertMovies(movies),
+		Movies: convertMovies(movies),
 	}
 
 	return rsp, nil
